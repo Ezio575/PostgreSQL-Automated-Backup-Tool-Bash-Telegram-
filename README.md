@@ -1,54 +1,53 @@
-PostgreSQL-Automated-Backup-Tool-Bash-Telegram
-Cкрипт для автоматизации бэкапов PostgreSQL с защитой от переполнения диска и уведомлениями в Telegram
+## PostgreSQL-Automated-Backup-Tool-Bash-Telegram
+`Cкрипт для автоматизации бэкапов PostgreSQL с защитой от переполнения диска и уведомлениями в Telegram`
 
-**Features**
-Горячий бэкап через pg_dump — база продолжает работать
-Пароли в .pgpass, токены в переменных окружения (никаких plaintext!)
-Автоматическое удаление старых бэкапов (>7 дней) с логированием
-Мгновенные уведомления в Telegram о успехе/ошибках
-Проверки прав доступа, детальное логирование, graceful exit
+*1. Features*
+` Горячий бэкап через pg_dump — база продолжает работать `
+` Пароли в .pgpass, токены в переменных окружения (никаких plaintext!) `
+` Автоматическое удаление старых бэкапов (>7 дней) с логированием `
+` Мгновенные уведомления в Telegram о успехе/ошибках `
+` Проверки прав доступа, детальное логирование, graceful exit`
 
-Prerequisites
-# Необходимые пакеты (Ubuntu/Debian)
-sudo apt install postgresql-client curl gzip
-# 1. Создай файл ~/.pgpass с правами 0600
-echo "localhost:5432:*:db_user:твой_пароль" > ~/.pgpass
-chmod 0600 ~/.pgpass
-# 2. Создай Telegram-бота у @BotFather
-# Получи TG_TOKEN и свой chat_id через @userinfobot
+*2. Prerequisites*
+  Необходимые пакеты (Ubuntu/Debian)
+  sudo apt install postgresql-client curl gzip
+*2.1 Создай файл ~/.pgpass с правами 0600*
+  echo "localhost:5432:*:db_user:твой_пароль" > ~/.pgpass
+  chmod 0600 ~/.pgpass
+*2.2 Создай Telegram-бота у @BotFather*
+  Получи TG_TOKEN и свой chat_id через @userinfobot
 
-Quick Start
-  1. Сохрани скрипт
-# Создай файл
-nano ~/backup_postgres.sh
-chmod +x ~/backup_postgres.sh
-  2. Настрой переменные (лучше через .env)
-# Создай .env файл
-cat > ~/.backup.env << EOF
-DB_NAME=my_db(пропиши)
-DB_USER=db_user(пропиши)
-BACKUP_DIR=/backups/postgres(пропиши)
-TG_TOKEN=(пропиши)
-TG_CHAT_ID=(пропиши)
+# Quick Start
+  *Сохрани скрипт*
+  *Создай файл*
+    nano ~/backup_postgres.sh
+    chmod +x ~/backup_postgres.sh
+  *Настрой переменные (лучше через .env)*
+    cat > ~/.backup.env << EOF
+    DB_NAME=my_db(пропиши)
+    DB_USER=db_user(пропиши)
+    BACKUP_DIR=/backups/postgres(пропиши)
+    TG_TOKEN=(пропиши)
+    TG_CHAT_ID=(пропиши)
+  Загружай в скрипте: source ~/.backup.env
+  *Добавь в crontab*
+    crontab -e
+  *Запуск каждый день в 3:00 ночи*
+    0 3 * * * /путь_к_файлу/backup_postgres.sh
+  *Или каждый час для теста:*
+    0 * * * * /путь_к_файлу/backup_postgres.sh
+  *Первый запуск*
+    source ~/.backup.env && ~/backup_postgres.sh
 
-# Загружай в скрипте: source ~/.backup.env
-  3. Добавь в crontab
-crontab -e
-# Запуск каждый день в 3:00 ночи
-0 3 * * * /путь_к_файлу/backup_postgres.sh
-# Или каждый час для теста: 0 * * * * /путь_к_файлу/backup_postgres.sh
-  4. Первый запуск
-source ~/.backup.env && ~/backup_postgres.sh
+*Configuration/Что изменить в конфигурации*
+    DB_NAME	Имя базы данных
+    DB_USER	Пользователь PostgreSQL
+    BACKUP_DIR	Папка для бэкапов
+    KEEP_DAYS	Хранить бэкапы N дней
+    TG_TOKEN	Токен Telegram бота	ОБЯЗАТЕЛЬНО!
+    TG_CHAT_ID	Твой chat_id	ОБЯЗАТЕЛЬНО!
 
-  **Configuration/Что изменить в конфигурации**
-DB_NAME	Имя базы данных
-DB_USER	Пользователь PostgreSQL
-BACKUP_DIR	Папка для бэкапов
-KEEP_DAYS	Хранить бэкапы N дней
-TG_TOKEN	Токен Telegram бота	ОБЯЗАТЕЛЬНО!
-TG_CHAT_ID	Твой chat_id	ОБЯЗАТЕЛЬНО!
-
-**Пример уведомлений Telegram
+*Пример уведомлений Telegram*
 ✅ Бэкап: 12M. Удалено старых: 2. Осталось: 8
 ❌ ОШИБКА: Нет прав записи в /backups/postgres
 ❌ ОШИБКА БЭКАПА (Код: 1). База: my_db
@@ -58,7 +57,7 @@ TG_CHAT_ID	Твой chat_id	ОБЯЗАТЕЛЬНО!
     BACKUP_DIR принадлежит пользователю cron
     Токен бота НЕ в истории bash (history -c)
 
-**Troubleshooting**
+*Troubleshooting*
 Could not resolve host	Проверь интернет/DNS
 403 Forbidden: bots can't send to bots	Проверь TG_CHAT_ID через @userinfobot
 No such file or directory	mkdir -p $BACKUP_DIR
