@@ -1,20 +1,22 @@
-# PostgreSQL-Automated-Backup-Tool-Bash-Telegram-
+PostgreSQL-Automated-Backup-Tool-Bash-Telegram
 Cкрипт для автоматизации бэкапов PostgreSQL с защитой от переполнения диска и уведомлениями в Telegram
-Features
+
+**Features**
     Zero-Downtime: Горячий бэкап через pg_dump — база продолжает работать
     Security First: Пароли в .pgpass, токены в переменных окружения (никаких plaintext!)
     Smart Rotation: Автоматическое удаление старых бэкапов (>7 дней) с логированием
     Instant Alerts: Мгновенные уведомления в Telegram о успехе/ошибках
     Fail-Safe: Проверки прав доступа, детальное логирование, graceful exit
+
 Prerequisites
-bash
 # Необходимые пакеты (Ubuntu/Debian)
 sudo apt install postgresql-client curl gzip
 # 1. Создай файл ~/.pgpass с правами 0600
-echo "localhost:5432:*:ezio575:твой_пароль" > ~/.pgpass
+echo "localhost:5432:*:db_user:твой_пароль" > ~/.pgpass
 chmod 0600 ~/.pgpass
 # 2. Создай Telegram-бота у @BotFather
 # Получи TG_TOKEN и свой chat_id через @userinfobot
+
 Quick Start
   1. Сохрани скрипт
 # Создай файл
@@ -23,18 +25,18 @@ chmod +x ~/backup_postgres.sh
   2. Настрой переменные (лучше через .env)
 # Создай .env файл
 cat > ~/.backup.env << EOF
-DB_NAME=my_db
-DB_USER=ezio575
-BACKUP_DIR=/home/ezio575/backups/postgres
-TG_TOKEN=1198216242:AAG88zn0qlYEzXH2QN6lddlFwOC1NuNNZLk
-TG_CHAT_ID=639493833
-EOF
+DB_NAME=my_db(пропиши)
+DB_USER=db_user(пропиши)
+BACKUP_DIR=/backups/postgres(пропиши)
+TG_TOKEN=(пропиши)
+TG_CHAT_ID=(пропиши)
+
 # Загружай в скрипте: source ~/.backup.env
   3. Добавь в crontab
 crontab -e
 # Запуск каждый день в 3:00 ночи
-0 3 * * * /home/ezio575/backup_postgres.sh
-# Или каждый час для теста: 0 * * * * /home/ezio575/backup_postgres.sh
+0 3 * * * /путь_к_файлу/backup_postgres.sh
+# Или каждый час для теста: 0 * * * * /путь_к_файлу/backup_postgres.sh
   4. Первый запуск
 source ~/.backup.env && ~/backup_postgres.sh
 
