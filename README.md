@@ -1,3 +1,6 @@
+![Bash](https://img.shields.io/badge/Language-Bash-4EAA25?style=flat&logo=gnu-bash&logoColor=white)
+![Docker](https://img.shields.io/badge/Platform-Docker-2496ED?style=flat&logo=docker&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
 ## PostgreSQL-Automated-Backup-Tool-Bash-Telegram
 `Cкрипт для автоматизации бэкапов PostgreSQL с защитой от переполнения диска и уведомлениями в Telegram`
 
