@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  # Твой сервис бэкапов
+  db-backup:
+    build: .
+    container_name: pg_backup_tool
+    environment:
+      - DB_HOST=postgres_container_name # Или IP хоста
+      - DB_USER=postgres
+      - DB_NAME=my_database
+      - PGPASSWORD=secure_password # Тут можно проще, чем через .pgpass для контейнера
+      - TG_TOKEN=123456:ABC...
+      - TG_CHAT_ID=987654...
+    volumes:
+      - ./backups:/backups/postgres # Пробрасываем папку наружу, иначе бэкапы умрут вместе с контейнером!
+    depends_on:
+      - postgres_db # Если база в этой же сети
+
+  # Пример базы (если поднимаешь всё вместе)
+  postgres_db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: secure_password
